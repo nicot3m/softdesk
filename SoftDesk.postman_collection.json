@@ -1,0 +1,766 @@
+{
+	"info": {
+		"_postman_id": "b3814482-0555-491f-abdf-974c6837fba8",
+		"name": "SoftDesk",
+		"description": "**SoftDesk is a Back-end efficient and secure RESTful API to manage Projetcts with  Issues, Contributors and Comments.**\n\n**The API SoftDesk is coded in Python with DjangoRest and has two applications account and helpdesk.**\n\n**The data are saved in the database db.sqlite3**\n\n_**Warning: The environnement Environment_OC_P10 must be activated in this collection.**_ \n## Authorization\n* Authorization with bearer Thoken (jwt_access). \n* The user must be logged-in to use the API.\n* Anyone can create an user.\n\n| Authorization | Create        | Read          | Update        | Delete        |\n| ------------- |:-------------:|:-------------:|:-------------:|:-------------:|\n| Project| logged-in user | project_contributor | project_author | project_author |\n| Issue| project_contributor | project_contributor | issue_author | issue_author |\n| Comment| project_contributor | project_contributor | comment_author |comment_author|\n|Contributor|project_author| project_author + project_contributor |N/A|project_author|",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "account",
+			"item": [
+				{
+					"name": "Create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"océ\",\r\n    \"first_name\": \"océ\",\r\n    \"last_name\": \"lam\",\r\n    \"email\": \"oce@gmail.com\",\r\n    \"password\": \"123654abc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/signup/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"signup",
+								""
+							]
+						},
+						"description": "**Signup a new user**\n* Create an account to be able to connect.\n* The password must contain at least 8 character, digits out of order and letters. It must not be common.\n* Fill the body as per next example."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response  = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"jwt_refresh\", response.refresh);\r",
+									"pm.environment.set(\"jwt_access\", response.access);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{JWT}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"océ\",\r\n    \"password\": \"123654abc\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/login/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"login",
+								""
+							]
+						},
+						"description": "**Log in a user**\n* Fill the body as per next example."
+					},
+					"response": []
+				},
+				{
+					"name": "Get users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response  = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"jwt_refresh\", response.refresh);\r",
+									"pm.environment.set(\"jwt_access\", response.access);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_access}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/signup/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"signup",
+								""
+							]
+						},
+						"description": "**Get the registered users**"
+					},
+					"response": []
+				}
+			],
+			"description": "* Create user\n* Login\n* Get users"
+		},
+		{
+			"name": "helpdesk",
+			"item": [
+				{
+					"name": "Project",
+					"item": [
+						{
+							"name": "Read the projects of the logged user",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										""
+									]
+								},
+								"description": "**Read the projects of the logged user**"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a project",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"projet 1\",\r\n    \"description\": \"description projet 1\",\r\n    \"type\": \"backend\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										""
+									]
+								},
+								"description": "**Create a project**\n* Fill the body as per next example.\n* Make choice for type: backend, frontend, Android or iOS"
+							},
+							"response": []
+						},
+						{
+							"name": "Read a project",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										""
+									]
+								},
+								"description": "**Show the detail of a project**\n* Add the project ID in the URL http://127.0.0.1:8000/projects/ID/"
+							},
+							"response": []
+						},
+						{
+							"name": "Update a project",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"projet1\",\r\n    \"description\": \"description projet1 mise à jour\",\r\n    \"type\": \"backend\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										""
+									]
+								},
+								"description": "**Update the detail of a project**\n* Add the project ID in the URL http://127.0.0.1:8000/projects/ID/\n* In the body, the fields are the same as the request create a project.\n* You can update the fields that you want.\n* For example, fill the body as per next example."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a project",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										""
+									]
+								},
+								"description": "**Delete a project**\n* Add the project ID in the URL http://127.0.0.1:8000/projects/ID/"
+							},
+							"response": []
+						}
+					],
+					"description": "* Read the projects of the logged user\n* Create a project\n* Read a project\n* Delete a project"
+				},
+				{
+					"name": "Contributor",
+					"item": [
+						{
+							"name": "Create a contributor for a project",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\": 10,\r\n    \"permission\": \"All\",\r\n    \"role\": \"Author\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/users/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"users",
+										""
+									]
+								},
+								"description": "**Create a contributor for a project**\n* Add the project ID in the URL http://127.0.0.1:8000/projects/ID/users/\n* Fill the body as per next example with a user id.\n* Make choice for permission: Read or  All\n* Make choice for role: Author, Manager or Creator"
+							},
+							"response": []
+						},
+						{
+							"name": "Read the contributors of a project",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/users/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"users",
+										""
+									]
+								},
+								"description": "**Get the contributors of a project**\n* Add the project ID in the URL http://127.0.0.1:8000/projects/ID/users/"
+							},
+							"response": []
+						},
+						{
+							"name": "Dell a contributor of a project",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/users/93/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"users",
+										"93",
+										""
+									]
+								},
+								"description": "**Delete the contributor of a project**\n* Add the project ID and the contributor ID in the URL http://127.0.0.1:8000/projects/ID/users/ID/"
+							},
+							"response": []
+						}
+					],
+					"description": "* Create a contributor for a project\n* Read the contributors of a project\n* Dell a contributor of a project"
+				},
+				{
+					"name": "Issue",
+					"item": [
+						{
+							"name": "Create an issue for a project",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"issue1\",\r\n    \"description\": \"description1\",\r\n    \"tag\": \"Bug\",\r\n    \"priority\": \"Low\",\r\n    \"status\": \"Pending\",\r\n    \"assignee_user_id\": 8\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/issues/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"issues",
+										""
+									]
+								},
+								"description": "**Create an issue for a project**\n* Add the project ID in the URL http://127.0.0.1:8000/projects/ID/issues/\n* Fill the body as per next example, \n* assignee_user_id, by default your ID\n* Make choice for tag: Bug, Task or Upgrade\n* Make choice for priority: Low, Medium or High\n* Make choice for status: Pending, Open or Closed"
+							},
+							"response": []
+						},
+						{
+							"name": "Read the issues of a project",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/issues/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"issues",
+										""
+									]
+								},
+								"description": "**Get the issues of the project**\n* Add the project ID in the URL http://127.0.0.1:8000/projects/ID/issues/"
+							},
+							"response": []
+						},
+						{
+							"name": "Update an issue of a project",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"issue1\",\r\n    \"description\": \"description1 update\",\r\n    \"tag\": \"Bug\",\r\n    \"priority\": \"High\",\r\n    \"status\": \"Open\",\r\n    \"assignee_user_id\": 8\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/issues/94/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"issues",
+										"94",
+										""
+									]
+								},
+								"description": "**Update the detail of an issue**\n* Add the project ID and the issue ID in the URL http://127.0.0.1:8000/projects/ID/issues/ID/\n* In the body, the fields are the same as the request create an issue.\n* You can update the fields that you want.\n* For example, fill the body as per next example."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete an issue of a project",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/issues/94/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"issues",
+										"94",
+										""
+									]
+								},
+								"description": "**Delete the issue of a project**\n* Add the project ID and the issue ID in the URL http://127.0.0.1:8000/projects/ID/issues/ID/"
+							},
+							"response": []
+						}
+					],
+					"description": "* Create an issue for a project\n* Read the issues of a project\n* Update an issue of a project\n* Delete an issue of a project"
+				},
+				{
+					"name": "Comment",
+					"item": [
+						{
+							"name": "Create a comment of an issue",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description comment1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/issues/94/comments/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"issues",
+										"94",
+										"comments",
+										""
+									]
+								},
+								"description": "**Create a comment for an issue**\n* Add the project ID and the issue ID in the URL http://127.0.0.1:8000/projects/ID/issues/ID/comments/\n* Fill the body as per next example"
+							},
+							"response": []
+						},
+						{
+							"name": "Get the comments of an issue",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/issues/94/comments/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"issues",
+										"94",
+										"comments",
+										""
+									]
+								},
+								"description": "**Get the comments of an issue**\n* Add the project ID and the issue ID in the URL http://127.0.0.1:8000/projects/ID/issues/ID/comments/"
+							},
+							"response": []
+						},
+						{
+							"name": "Update a comment of an issue",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"description\": \"description comment1 updated\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/issues/94/comments/10/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"issues",
+										"94",
+										"comments",
+										"10",
+										""
+									]
+								},
+								"description": "**Update the detail of a comment**\n* Add the project ID, the issue ID and the comment ID in the URL http://127.0.0.1:8000/projects/ID/issues/ID/comments/ID/\n* You can update the field description.\n* For example, fill the body as per next example."
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a comment of an issue",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/issues/94/comments/10/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"issues",
+										"94",
+										"comments",
+										"10",
+										""
+									]
+								},
+								"description": "**Delete a comment**\n* Add the project ID, the issue ID and the comment ID in the URL http://127.0.0.1:8000/projects/ID/issues/ID/comments/ID/"
+							},
+							"response": []
+						},
+						{
+							"name": "Read a comment of an issue",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://127.0.0.1:8000/projects/43/issues/94/comments/10/",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "8000",
+									"path": [
+										"projects",
+										"43",
+										"issues",
+										"94",
+										"comments",
+										"10",
+										""
+									]
+								},
+								"description": "**Read the detail of a comment**\n* Add the project ID, the issue ID and the comment ID in the URL http://127.0.0.1:8000/projects/ID/issues/ID/comments/ID/"
+							},
+							"response": []
+						}
+					],
+					"description": "* Create a comment of an issue\n* Get the comments of an issue\n* Update a comment of an issue\n* Delete a comment of an issue\n* Read a comment of an issue"
+				}
+			],
+			"description": "* Project\n* Contributor\n* Issue\n* Comment",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{jwt_access}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

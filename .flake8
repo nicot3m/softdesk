@@ -1,0 +1,26 @@
+[flake8]
+
+exclude =
+    .git,
+	.idea
+	.gitignore,
+	.flake8,
+	readme.md,
+	requirements.txt,
+	P10_01_lien_repository_GitHub.txt,
+	env/,
+	flake-report/,
+	account/__pycache__/,
+	account/migrations/,
+	helpdesk/__pycache__/,
+	helpdesk/migrations/,
+	softdesk/__pycache__/,
+	softdesk/migrations/,
+	db.sqlite3,
+	account/tests.py,
+	helpdesk/tests.py,
+	SoftDesk.postman_collection.json,
+
+max-line-length=119
+format=html
+htmldir=flake-report

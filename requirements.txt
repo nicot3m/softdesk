@@ -1,0 +1,11 @@
+asgiref==3.3.4
+django == 3.2.2
+djangorestframework==3.12.4
+djangorestframework-simplejwt==4.6.0
+drf-nested-routers==0.93.3
+flake8==3.9.2
+flake8-html==0.4.1
+markdown==3.3.4
+PyJWT==2.1.0
+pytz==2021.1
+sqlparse==0.4.1
